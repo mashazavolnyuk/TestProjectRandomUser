@@ -15,11 +15,11 @@ class ViewModelUsersList : ViewModel() {
     var error: MutableLiveData<Error>? = null
 
     private val compositeDisposable = CompositeDisposable()
+    private val dataSource = UsersDataSource(compositeDisposable)
 
     private val pageSize = 20
 
     init {
-        val dataSource = UsersDataSource(compositeDisposable)
         error = dataSource.error
         val config: PagedList.Config = PagedList.Config.Builder()
             .setPageSize(pageSize)
@@ -30,6 +30,10 @@ class ViewModelUsersList : ViewModel() {
                 .setFetchExecutor(MainThreadExecutor()).build()
         userList = MutableLiveData()
         userList!!.postValue(pagedList)
+    }
+
+    fun retry(){
+        dataSource.retry()
     }
 
     class MainThreadExecutor : Executor {

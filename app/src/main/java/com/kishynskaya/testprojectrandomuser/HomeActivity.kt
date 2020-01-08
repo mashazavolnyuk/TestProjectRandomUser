@@ -2,6 +2,7 @@ package com.kishynskaya.testprojectrandomuser
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -21,6 +22,10 @@ class HomeActivity : AppCompatActivity(R.layout.activity_main), UsersAdapter.OnC
         usersViewModel = ViewModelProviders.of(this).get(ViewModelUsersList::class.java)
         adapter = UsersAdapter()
         adapter.setOnclickListener(this)
+        fabRetry.setOnClickListener {
+            usersViewModel.retry()
+            fabRetry.hide()
+        }
         recyclerViewUsers.adapter = adapter
         subscribeUI()
     }
@@ -28,11 +33,13 @@ class HomeActivity : AppCompatActivity(R.layout.activity_main), UsersAdapter.OnC
     private fun subscribeUI() {
         usersViewModel.error!!.observe(this,
             Observer<Error> {
-                Toast.makeText(this, "Can't load data", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Retry please", Toast.LENGTH_LONG).show()
+                fabRetry.show()
             })
         usersViewModel.userList!!.observe(this,
             Observer<PagedList<Result>> { data ->
                 adapter.submitList(data)
+                fabRetry.hide()
             })
     }
 

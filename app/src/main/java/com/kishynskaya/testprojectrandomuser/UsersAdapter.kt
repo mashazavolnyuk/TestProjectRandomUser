@@ -29,7 +29,7 @@ class UsersAdapter : PagedListAdapter<Result, UsersAdapter.UserViewHolder>(Users
         this.onclickListenerResult = onclickListenerResult
     }
 
-    inner class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+     inner class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(result: Result) {
             itemView.setOnClickListener {
                 onclickListenerResult?.onClickResult(result)
