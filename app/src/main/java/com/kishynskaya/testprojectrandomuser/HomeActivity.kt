@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.paging.PagedList
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_main.*
 import java.lang.Error
 
@@ -36,6 +37,8 @@ class HomeActivity : AppCompatActivity(R.layout.activity_main), UsersAdapter.OnC
     }
 
     override fun onClickResult(result: Result) {
-        startActivity(Intent(this@HomeActivity, ProfileActivity::class.java))
+        val intent = Intent(this@HomeActivity, ProfileActivity::class.java)
+        intent.putExtra("data", Gson().toJson(result))
+        startActivity(intent)
     }
 }
