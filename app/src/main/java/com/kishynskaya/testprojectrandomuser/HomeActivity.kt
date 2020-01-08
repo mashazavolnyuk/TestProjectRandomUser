@@ -1,44 +1,41 @@
 package com.kishynskaya.testprojectrandomuser
 
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.paging.PagedList
-
 import kotlinx.android.synthetic.main.activity_main.*
 import java.lang.Error
-import java.lang.Exception
 
-class HomeActivity : AppCompatActivity(R.layout.activity_main) {
+class HomeActivity : AppCompatActivity(R.layout.activity_main), UsersAdapter.OnClickResult {
 
     private lateinit var usersViewModel: ViewModelUsersList
-    var testList: PagedList<Result>? = null
+    private lateinit var adapter: UsersAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         usersViewModel = ViewModelProviders.of(this).get(ViewModelUsersList::class.java)
-        fab.setOnClickListener {
-            try {
-                testList?.loadAround(100) //test pagination
-            } catch (ex: Exception) {
-                Log.d("Exception", ex.message)
-            }
-        }
+        adapter = UsersAdapter()
+        adapter.setOnclickListener(this)
+        recyclerViewUsers.adapter = adapter
         subscribeUI()
     }
 
     private fun subscribeUI() {
         usersViewModel.error!!.observe(this,
-            Observer<Error> { error ->
+            Observer<Error> {
                 Toast.makeText(this, "Can't load data", Toast.LENGTH_LONG).show()
             })
         usersViewModel.userList!!.observe(this,
             Observer<PagedList<Result>> { data ->
-                testList = data
-
+                adapter.submitList(data)
             })
+    }
+
+    override fun onClickResult(result: Result) {
+        startActivity(Intent(this@HomeActivity, ProfileActivity::class.java))
     }
 }
